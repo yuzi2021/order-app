@@ -4,6 +4,10 @@
 
 This simple web application is designed to help manage and generate order lists for Pilke Espoonlahti. It allows users to input order quantities for various items and generate a PDF order list with a professional layout.
 
+## Live Demo
+
+The app is live and can be accessed here: [Pilke Espoonlahti Pamark Order App](https://yuzi2021.github.io/order-app/)
+
 ## Features
 
 - Easy-to-use web interface
