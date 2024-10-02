@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Order App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        input[type="number"] {
+            width: 60px;
+        }
+        button {
+            display: block;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Order App</h1>
+    <table id="inventory">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Item</th>
+                <th>Order Number</th>
+                <th>Unit</th>
+                <th>Amount</th>
+                <th>Item Name (Chinese)</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <button onclick="generatePDF()">Generate PDF</button>
+
+    <script>
+        // Inventory data
+        const inventory = [
+            { number: 1, item: "ECOLAB Grill Cleaner", orderNumber: "9052810", unit: "750ml", chineseName: "清洁剂" },
+            { number: 2, item: "TORK Foam Soap Clarity", orderNumber: "520201", unit: "1000ml", chineseName: "泡沫皂" },
+            { number: 3, item: "ECOLAB Dip-it Liquid", orderNumber: "905077", unit: "1L", chineseName: "浸泡液" }
+        ];
+
+        // Display inventory and input fields
+        const inventoryBody = document.querySelector('#inventory tbody');
+        
+        function addInventoryItem(item) {
+            const row = inventoryBody.insertRow();
+            row.innerHTML = `
+                <td>${item.number}</td>
+                <td>${item.item}</td>
+                <td>${item.orderNumber}</td>
+                <td>${item.unit}</td>
+                <td><input type="number" id="amount-${item.number}" min="0" value="0"></td>
+                <td>${item.chineseName}</td>
+            `;
+        }
+
+        inventory.forEach(addInventoryItem);
+
+        // Function to add new item
+        function addNewItem(number, item, orderNumber, unit, chineseName) {
+            const newItem = { number, item, orderNumber, unit, chineseName };
+            inventory.push(newItem);
+            addInventoryItem(newItem);
+        }
+
+        // Generate PDF
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(16);
+            doc.text("Pilke Espoonlahti Pamark Order List", 14, 15);
+            
+            // Add date
+            const currentDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+            doc.setFontSize(12);
+            doc.text(`Date: ${currentDate}`, 14, 25);
+            
+            // Prepare table data
+            const tableData = inventory
+                .map(item => {
+                    const quantity = document.getElementById(`amount-${item.number}`).value;
+                    return [
+                        item.item,
+                        item.orderNumber,
+                        item.unit,
+                        quantity
+                    ];
+                })
+                .filter(row => row[3] > 0); // Only include items with quantity > 0
+
+            // Add sequential numbering to table data
+            const numberedTableData = tableData.map((row, index) => [index + 1, ...row]);
+
+            // Add table to PDF
+            doc.autoTable({
+                head: [['No.', 'Item', 'Order Number', 'Unit', 'Amount']],
+                body: numberedTableData,
+                startY: 35,
+                theme: 'grid',
+                styles: { fontSize: 8, cellPadding: 1.5 },
+                headStyles: { fillColor: [200, 200, 200], textColor: 0, fontStyle: 'bold' }
+            });
+
+            // Generate filename with current date
+            const filename = `Pilke_Espoonlahti_Pamark_Order_${currentDate}.pdf`;
+            
+            // Save PDF
+            doc.save(filename);
+        }
+    </script>
+</body>
+</html>
