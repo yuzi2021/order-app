@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Order App</title>
+    <title>Pilke Pamark Order App</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
     <style>
@@ -41,7 +41,7 @@
     </style>
 </head>
 <body>
-    <h1>Order App</h1>
+    <h1>Pilke Espoonlahti Pamark Order App</h1>
     <table id="inventory">
         <thead>
             <tr>
@@ -58,11 +58,30 @@
     <button onclick="generatePDF()">Generate PDF</button>
 
     <script>
-        // Inventory data
+        // Updated inventory data with Chinese translations
         const inventory = [
-            { number: 1, item: "ECOLAB Grill Cleaner", orderNumber: "9052810", unit: "750ml", chineseName: "清洁剂" },
-            { number: 2, item: "TORK Foam Soap Clarity", orderNumber: "520201", unit: "1000ml", chineseName: "泡沫皂" },
-            { number: 3, item: "ECOLAB Dip-it Liquid", orderNumber: "905077", unit: "1L", chineseName: "浸泡液" }
+            { number: 1, item: "ECOLAB Grill Cleaner", orderNumber: "9052810", unit: "750ml", chineseName: "艺康烤架清洁剂" },
+            { number: 2, item: "TORK Foam Soap Clarity", orderNumber: "520201", unit: "1000ml", chineseName: "多康泡沫洗手液" },
+            { number: 3, item: "ECOLAB Dip-it Liquid pre-soaking and stain remover", orderNumber: "905077", unit: "1L", chineseName: "艺康浸泡液和去污剂" },
+            { number: 4, item: "ECOLAB PEP ACTIVE cleaning and stin remover", orderNumber: "3021030", unit: "500ml", chineseName: "艺康活性清洁去污剂" },
+            { number: 5, item: "ECOLAB Maxx Windus C2 glass and surface cleaner", orderNumber: "9084640", unit: "750ml", chineseName: "艺康玻璃和表面清洁剂" },
+            { number: 6, item: "ECOLAB Brial Shine universal cleaner", orderNumber: "300723", unit: "1L", chineseName: "艺康通用清洁剂" },
+            { number: 7, item: "ECOLAB Kristalin Classic sanitary cleaner", orderNumber: "3034690", unit: "1L", chineseName: "艺康卫生间清洁剂" },
+            { number: 8, item: "ECOLAB Assert Lemon hand dishwashing liquid", orderNumber: "9032270", unit: "1L", chineseName: "艺康柠檬洗碗液" },
+            { number: 9, item: "Abena Classic vinyl glove powder-free XL", orderNumber: "44240", unit: "100pcs", chineseName: "爱贝纳经典无粉乙烯基手套XL" },
+            { number: 10, item: "Abena Classic vinyl glove powder-free L", orderNumber: "44240", unit: "100pcs", chineseName: "爱贝纳经典无粉乙烯基手套L" },
+            { number: 11, item: "Abena Classic vinyl glove powder-free M", orderNumber: "44240", unit: "100pcs", chineseName: "爱贝纳经典无粉乙烯基手套M" },
+            { number: 12, item: "Clean trashbag 60L LD musta 750x800mm/0,04", orderNumber: "94600", unit: "10kpl", chineseName: "60升低密度黑色垃圾袋" },
+            { number: 13, item: "Clean trash bag 30L black HDPE 500x700/0.008 50pcs for light trash only", orderNumber: "5224", unit: "50kpl", chineseName: "30升高密度轻型黑色垃圾袋" },
+            { number: 14, item: "Clean trashbag 30L black LD 500x700/0,02", orderNumber: "3015104", unit: "50kpl", chineseName: "30升低密度黑色垃圾袋" },
+            { number: 15, item: "BioBag Bio Trashbag 35L 540x510x0,020", orderNumber: "186904", unit: "20kpl", chineseName: "35升生物降解垃圾袋" },
+            { number: 16, item: "BioBag Bio Trashbag 20L 420x500x0,017", orderNumber: "186902", unit: "15kpl", chineseName: "20升生物降解垃圾袋" },
+            { number: 17, item: "Clean waste bag 60L LD black 750x800mm/0.04 10pcs", orderNumber: "94600", unit: "10kpl", chineseName: "60升低密度黑色垃圾袋" },
+            { number: 18, item: "Clean waste bag 150L LD black 750x1100mm/0.04", orderNumber: "3010103", unit: "10pcs", chineseName: "150升低密度黑色垃圾袋" },
+            { number: 19, item: "Tork N10 Xpressnap Snack® dispenser napkin white 1-ply", orderNumber: "17840", unit: "9000 pcs", chineseName: "多康N10 Xpressnap Snack®单层白色餐巾纸" },
+            { number: 20, item: "Tork H2 Xpress® Soft Natural Multifold Advanced hand towel 2 ply", orderNumber: "130299", unit: "3780 sheets", chineseName: "多康H2 Xpress®高级双层多折擦手纸" },
+            { number: 21, item: "Tork T4 Advanced toilet paper 2-ply white 35.00m", orderNumber: "110284", unit: "24 rolls", chineseName: "多康T4高级双层卫生纸" },
+            { number: 22, item: "Electrolux ES100 dust bag fleece", orderNumber: "16102211", unit: "10kpl", chineseName: "伊莱克斯ES100吸尘器滤袋" }
         ];
 
         // Display inventory and input fields
@@ -82,13 +101,6 @@
 
         inventory.forEach(addInventoryItem);
 
-        // Function to add new item
-        function addNewItem(number, item, orderNumber, unit, chineseName) {
-            const newItem = { number, item, orderNumber, unit, chineseName };
-            inventory.push(newItem);
-            addInventoryItem(newItem);
-        }
-
         // Generate PDF
         function generatePDF() {
             const { jsPDF } = window.jspdf;
@@ -96,7 +108,7 @@
             
             // Add title
             doc.setFontSize(16);
-            doc.text("Pilke Espoonlahti Pamark Order List", 14, 15);
+            doc.text("Pilke Pamark Order List", 14, 15);
             
             // Add date
             const currentDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
@@ -130,7 +142,7 @@
             });
 
             // Generate filename with current date
-            const filename = `Pilke_Espoonlahti_Pamark_Order_${currentDate}.pdf`;
+            const filename = `Pilke_Pamark_Order_${currentDate}.pdf`;
             
             // Save PDF
             doc.save(filename);
